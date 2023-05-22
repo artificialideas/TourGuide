@@ -1,4 +1,4 @@
-package tourGuide;
+package tourGuide.controller;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ import tripPricer.Provider;
 
 @RestController
 public class TourGuideController {
-
 	@Autowired
 	TourGuideService tourGuideService;
 	
@@ -75,6 +74,4 @@ public class TourGuideController {
     private User getUser(String userName) {
     	return tourGuideService.getUser(userName);
     }
-   
-
 }

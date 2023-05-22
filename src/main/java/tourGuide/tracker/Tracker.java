@@ -56,14 +56,16 @@ public class Tracker extends Thread {
 				logger.debug("Tracker stopping");
 				break;
 			}
-			
-			List<User> users = tourGuideService.getAllUsers();
-			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
+
+			// Start Tracker
 			stopWatch.start();
 
-			// ToDo: get a list of all users with their location
-
+			// Get all users
+			List<User> users = tourGuideService.getAllUsers();
 			users.forEach(tourGuideService::trackUserLocation);
+			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
+
+			// Stop Tracker
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 
