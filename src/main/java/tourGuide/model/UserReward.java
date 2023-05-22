@@ -1,4 +1,4 @@
-package tourGuide.user;
+package tourGuide.model;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
@@ -6,8 +6,12 @@ import gpsUtil.location.VisitedLocation;
 public class UserReward {
 
 	public final VisitedLocation visitedLocation;
+
 	public final Attraction attraction;
+
 	private int rewardPoints;
+
+	/** Class constructors */
 	public UserReward(VisitedLocation visitedLocation, Attraction attraction, int rewardPoints) {
 		this.visitedLocation = visitedLocation;
 		this.attraction = attraction;
@@ -19,12 +23,12 @@ public class UserReward {
 		this.attraction = attraction;
 	}
 
-	public void setRewardPoints(int rewardPoints) {
-		this.rewardPoints = rewardPoints;
-	}
-	
+	/** Getters / Setters */
 	public int getRewardPoints() {
 		return rewardPoints;
 	}
-	
+	public void setRewardPoints(int rewardPoints) {
+		this.rewardPoints = rewardPoints;
+	}
+
 }

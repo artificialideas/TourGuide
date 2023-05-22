@@ -11,7 +11,7 @@ import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
+import tourGuide.model.User;
 import tripPricer.Provider;
 
 @RestController
@@ -32,12 +32,12 @@ public class TourGuideController {
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
- 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
+ 	//  Instead: Get the closest five tourist attractions to the model - no matter how far away they are.
  	//  Return a new JSON object that contains:
     	// Name of Tourist attraction, 
         // Tourist attractions lat/long, 
-        // The user's location lat/long, 
-        // The distance in miles between the user's location and each of the attractions.
+        // The model's location lat/long,
+        // The distance in miles between the model's location and each of the attractions.
         // The reward points for visiting each Attraction.
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
@@ -53,9 +53,9 @@ public class TourGuideController {
     
     @RequestMapping("/getAllCurrentLocations")
     public String getAllCurrentLocations() {
-    	// TODO: Get a list of every user's most recent location as JSON
+    	// TODO: Get a list of every model's most recent location as JSON
     	//- Note: does not use gpsUtil to query for their current location, 
-    	//        but rather gathers the user's current location from their stored location history.
+    	//        but rather gathers the model's current location from their stored location history.
     	//
     	// Return object should be the just a JSON mapping of userId to Locations similar to:
     	//     {
