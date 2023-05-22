@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import gpsUtil.location.VisitedLocation;
-import gpsUtil.location.Location;
 import tripPricer.Provider;
 
 public class User {
@@ -15,7 +14,6 @@ public class User {
 	private String phoneNumber;
 	private String emailAddress;
 
-	private Location latestUserLocation; // New
 	private Date latestLocationTimestamp;
 
 	private UserPreferences userPreferences = new UserPreferences();
@@ -52,13 +50,6 @@ public class User {
 	}
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
-	}
-
-	public Location getLatestUserLocation() {
-		return latestUserLocation;
-	}
-	public void setLatestUserLocation(Location latestUserLocation) {
-		this.latestUserLocation = latestUserLocation;
 	}
 
 	public Date getLatestLocationTimestamp() {
