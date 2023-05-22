@@ -10,25 +10,17 @@ import gpsUtil.location.Location;
 import tripPricer.Provider;
 
 public class User {
-
 	private final UUID userId;
-
 	private final String userName;
-
 	private String phoneNumber;
-
 	private String emailAddress;
 
-	private Location userLocation; // New
-
+	private Location latestUserLocation; // New
 	private Date latestLocationTimestamp;
 
 	private UserPreferences userPreferences = new UserPreferences();
-
 	private final List<VisitedLocation> visitedLocations = new ArrayList<>();
-
 	private final List<UserReward> userRewards = new ArrayList<>();
-
 	private List<Provider> tripDeals = new ArrayList<>();
 
 	/** Class constructors */
@@ -62,11 +54,11 @@ public class User {
 		this.emailAddress = emailAddress;
 	}
 
-	public Location getUserLocation() {
-		return userLocation;
+	public Location getLatestUserLocation() {
+		return latestUserLocation;
 	}
-	public void setUserLocation(Location userLocation) {
-		this.userLocation = userLocation;
+	public void setLatestUserLocation(Location latestUserLocation) {
+		this.latestUserLocation = latestUserLocation;
 	}
 
 	public Date getLatestLocationTimestamp() {
@@ -112,5 +104,4 @@ public class User {
 	public void setTripDeals(List<Provider> tripDeals) {
 		this.tripDeals = tripDeals;
 	}
-
 }

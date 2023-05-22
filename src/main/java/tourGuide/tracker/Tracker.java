@@ -13,18 +13,28 @@ import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
 
 public class Tracker extends Thread {
-	private Logger logger = LoggerFactory.getLogger(Tracker.class);
-	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);
-	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-	private final TourGuideService tourGuideService;
+	private final Logger logger = LoggerFactory.getLogger(Tracker.class);
+
+	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(20);
 	private boolean stop = false;
 
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private final TourGuideService tourGuideService;
+
+
+	/** Class constructors */
 	public Tracker(TourGuideService tourGuideService) {
 		this.tourGuideService = tourGuideService;
-		
+	}
+
+	/**
+	 * Start the tracker
+	 */
+	public void startTracking() {
+		stop = false;
 		executorService.submit(this);
 	}
-	
+
 	/**
 	 * Assures to shut down the Tracker thread
 	 */
@@ -32,12 +42,17 @@ public class Tracker extends Thread {
 		stop = true;
 		executorService.shutdownNow();
 	}
-	
+
+	/**
+	 * Tracker launcher
+	 */
 	@Override
 	public void run() {
+		// Time counter
 		StopWatch stopWatch = new StopWatch();
+
 		while(true) {
-			if(Thread.currentThread().isInterrupted() || stop) {
+			if (Thread.currentThread().isInterrupted() || stop) {
 				logger.debug("Tracker stopping");
 				break;
 			}
@@ -45,9 +60,14 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u -> tourGuideService.trackUserLocation(u));
+
+			// ToDo: get a list of all users with their location
+
+			users.forEach(tourGuideService::trackUserLocation);
 			stopWatch.stop();
-			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
+			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+
+			// Reset Tracker
 			stopWatch.reset();
 			try {
 				logger.debug("Tracker sleeping");

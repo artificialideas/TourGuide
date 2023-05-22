@@ -4,11 +4,8 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 
 public class UserReward {
-
 	public final VisitedLocation visitedLocation;
-
 	public final Attraction attraction;
-
 	private int rewardPoints;
 
 	/** Class constructors */
@@ -30,5 +27,4 @@ public class UserReward {
 	public void setRewardPoints(int rewardPoints) {
 		this.rewardPoints = rewardPoints;
 	}
-
 }

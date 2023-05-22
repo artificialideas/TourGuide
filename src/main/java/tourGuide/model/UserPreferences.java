@@ -6,21 +6,16 @@ import javax.money.Monetary;
 import org.javamoney.moneta.Money;
 
 public class UserPreferences {
-
 	private final CurrencyUnit currency = Monetary.getCurrency("USD");
-
 	private Money lowerPricePoint = Money.of(0, currency);
-
 	private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);
 
 	private int tripDuration = 1;
 
 	private int numberOfAdults = 1;
-
 	private int numberOfChildren = 0;
 
 	private int attractionProximity = Integer.MAX_VALUE;
-
 	private int ticketQuantity = 1;
 
 	/** Class constructors */
@@ -76,5 +71,4 @@ public class UserPreferences {
 	public void setTicketQuantity(int ticketQuantity) {
 		this.ticketQuantity = ticketQuantity;
 	}
-
 }
