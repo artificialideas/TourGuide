@@ -9,23 +9,25 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
+import tourGuide.service.UserService;
 
 public class Tracker extends Thread {
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private TourGuideService tourGuideService;
+
 	private final Logger logger = LoggerFactory.getLogger(Tracker.class);
 
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(20);
 	private boolean stop = false;
-
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-	private final TourGuideService tourGuideService;
-
 
 	/** Class constructors */
-	public Tracker(TourGuideService tourGuideService) {
-		this.tourGuideService = tourGuideService;
-	}
+	public Tracker(TourGuideService tourGuideService) {}
 
 	/**
 	 * Start the tracker
@@ -61,8 +63,8 @@ public class Tracker extends Thread {
 			stopWatch.start();
 
 			// Get all users
-			List<User> users = tourGuideService.getAllUsers();
-			users.forEach(tourGuideService::trackUserLocation);
+			List<User> users = userService.getAllUsers();
+			users.forEach(userService::trackUserLocation);
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 
 			// Stop Tracker
