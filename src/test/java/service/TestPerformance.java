@@ -1,4 +1,4 @@
-package tourGuide;
+package service;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,13 +14,28 @@ import org.junit.Test;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
+import tourGuide.service.UserService;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TestPerformance {
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private TourGuideService tourGuideService;
+	@Autowired
+	private GpsUtil gpsUtil;
+	@Autowired
+	private RewardsService rewardsService;
 	
 	/*
 	 * A note on performance improvements:
@@ -45,20 +60,19 @@ public class TestPerformance {
 	@Ignore
 	@Test
 	public void highVolumeTrackLocation() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = userService.getAllUsers();
 		
 	    StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
+
 		for(User user : allUsers) {
-			tourGuideService.trackUserLocation(user);
+			userService.trackUserLocation(user);
 		}
+
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
 
@@ -69,18 +83,15 @@ public class TestPerformance {
 	@Ignore
 	@Test
 	public void highVolumeGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100);
+
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 	    Attraction attraction = gpsUtil.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 	     
 	    allUsers.forEach(u -> rewardsService.calculateRewards(u));
