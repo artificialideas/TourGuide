@@ -22,12 +22,6 @@ public class UserRewardService {
         return user.getUserRewards();
     }
 
-    public VisitedLocation getUserLocation(User user) {
-        return (user.getVisitedLocations().size() > 0) ?
-                user.getLastVisitedLocation() :
-                userService.trackUserLocation(user);
-    }
-
     public List<Provider> getTripDeals(User user) {
         int cumulativeRewardPoints = user.getUserRewards()
                 .stream()

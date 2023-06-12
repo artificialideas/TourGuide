@@ -50,6 +50,13 @@ public class TourGuideServiceTest {
 		
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
+
+	@Test
+	public void getUserLocation() {
+		VisitedLocation visitedLocation = userService.trackUserLocation(user);
+
+		assertEquals(visitedLocation.userId, user.getUserId());
+	}
 	
 	@Ignore // Not yet implemented
 	@Test

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.model.User;
 import tourGuide.tracker.Tracker;
 
 @Service
@@ -19,6 +20,8 @@ public class TourGuideService extends InternalTestingService {
 	private GpsUtil gpsUtil;
 	@Autowired
 	private RewardsService rewardsService;
+	@Autowired
+	private UserService userService;
 
 	private final Logger logger = LoggerFactory.getLogger(TourGuideService.class);
 
@@ -38,6 +41,17 @@ public class TourGuideService extends InternalTestingService {
 		tracker.startTracking();
 
 		addShutDownHook();
+	}
+
+	public VisitedLocation getUserLocation(User user) {
+		if (user.getVisitedLocations() != null) {
+			return (user.getVisitedLocations().size() > 0) ?
+					user.getLastVisitedLocation() :
+					userService.trackUserLocation(user);
+		} else {
+			logger.error("User with username " + user.getUserName() + " doesn't exist.");
+			return null;
+		}
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {

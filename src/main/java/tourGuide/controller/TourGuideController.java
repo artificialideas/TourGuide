@@ -32,8 +32,12 @@ public class TourGuideController {
     
     @RequestMapping("/getLocation") 
     public String getLocation(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = userRewardService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+        try {
+            VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
+            return JsonStream.serialize(visitedLocation.location);
+        } catch (RuntimeException ex) {
+            return ("User with username " + userName + " doesn't exist.");
+        }
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
@@ -47,7 +51,7 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = userRewardService.getUserLocation(getUser(userName));
+    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
     	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
     }
     
