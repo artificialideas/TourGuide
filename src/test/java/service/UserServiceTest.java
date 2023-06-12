@@ -1,18 +1,20 @@
 package service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.VisitedLocation;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import rewardCentral.RewardCentral;
+import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.service.UserService;
+import gpsUtil.GpsUtil;
+import gpsUtil.location.VisitedLocation;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes={Application.class})
 public class UserServiceTest {
     @Autowired
     private UserService userService;
