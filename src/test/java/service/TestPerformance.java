@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import rewardCentral.RewardCentral;
+import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -26,7 +27,7 @@ import tourGuide.model.User;
 import tourGuide.service.UserService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes={Application.class})
 public class TestPerformance {
 	@Autowired
 	private UserService userService;
