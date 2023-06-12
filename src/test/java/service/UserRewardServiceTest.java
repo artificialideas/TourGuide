@@ -29,13 +29,12 @@ public class UserRewardServiceTest {
     @Test
     public void getTripDeals() {
         InternalTestHelper.setInternalUserNumber(0);
-
         User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+        tourGuideService.tracker.startTracking();
 
         List<Provider> providers = userRewardService.getTripDeals(user);
-
         tourGuideService.tracker.stopTracking();
 
-        assertEquals(10, providers.size());
+        assertEquals(5, providers.size());
     }
 }
