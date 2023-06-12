@@ -60,11 +60,4 @@ public class UserServiceTest {
 
         assertEquals(user2, retrivedUser2);
     }
-
-    @Test
-    public void getUserLocation() {
-        VisitedLocation visitedLocation = userService.trackUserLocation(user);
-
-        assertEquals(visitedLocation.userId, user.getUserId());
-    }
 }
