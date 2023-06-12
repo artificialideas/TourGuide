@@ -37,7 +37,8 @@ public class UserService extends InternalTestingService {
     public void addUser(User user) {
         if (!internalUserMap.containsKey(user.getUserName())) {
             internalUserMap.put(user.getUserName(), user);
-        }
+        } else
+            logger.error(user.getUserName() + " already exists.");
     }
 
     public VisitedLocation trackUserLocation(User user) {
