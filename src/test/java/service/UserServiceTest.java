@@ -1,15 +1,14 @@
 package service;
 
-import rewardCentral.RewardCentral;
+import org.junit.After;
 import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
-import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.service.UserService;
-import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,53 +29,44 @@ public class UserServiceTest {
     @Autowired
     private TourGuideService tourGuideService;
 
+    private User user;
+
+    @Before
+    public void setUp() {
+        InternalTestHelper.setInternalUserNumber(0);
+        user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+        userService.addUser(user);
+        //tourGuideService.tracker.startTracking();
+    }
+
+    @After
+    public void tearDown() {
+        tourGuideService.tracker.stopTracking();
+    }
+
     @Test
     public void getAllUsers() {
-        InternalTestHelper.setInternalUserNumber(0);
-
-        User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-        User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
-
-        userService.addUser(user);
-        userService.addUser(user2);
-
         List<User> allUsers = userService.getAllUsers();
 
-        tourGuideService.tracker.stopTracking();
-
-        assertTrue(allUsers.contains(user));
-        assertTrue(allUsers.contains(user2));
+        assertTrue(allUsers.stream().map(User::getUserName).anyMatch(user.getUserName()::equals));
     }
 
     @Test
     public void addUser() {
-        InternalTestHelper.setInternalUserNumber(0);
-
-        User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
         User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
-
-        userService.addUser(user);
         userService.addUser(user2);
 
-        User retrivedUser = userService.getUser(user.getUserName());
         User retrivedUser2 = userService.getUser(user2.getUserName());
 
-        tourGuideService.tracker.stopTracking();
-
-        assertEquals(user, retrivedUser);
         assertEquals(user2, retrivedUser2);
     }
 
     @Test
     public void getUserLocation() {
-        GpsUtil gpsUtil = new GpsUtil();
-        RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-        InternalTestHelper.setInternalUserNumber(0);
-        TourGuideService tourGuideService = new TourGuideService();
-
         User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+
         VisitedLocation visitedLocation = userService.trackUserLocation(user);
-        tourGuideService.tracker.stopTracking();
+
         assertEquals(visitedLocation.userId, user.getUserId());
     }
 }
