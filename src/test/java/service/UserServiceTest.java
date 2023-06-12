@@ -1,6 +1,5 @@
 package service;
 
-import org.junit.After;
 import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.User;
@@ -8,6 +7,7 @@ import tourGuide.service.TourGuideService;
 import tourGuide.service.UserService;
 import gpsUtil.location.VisitedLocation;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,8 +63,6 @@ public class UserServiceTest {
 
     @Test
     public void getUserLocation() {
-        User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-
         VisitedLocation visitedLocation = userService.trackUserLocation(user);
 
         assertEquals(visitedLocation.userId, user.getUserId());
