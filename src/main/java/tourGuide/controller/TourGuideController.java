@@ -82,6 +82,6 @@ public class TourGuideController {
     }
     
     private User getUser(String userName) {
-    	return userService.getUser(userName);
+        return userService.getUser(userName);
     }
 }

@@ -15,7 +15,7 @@ import tourGuide.model.User;
 import tourGuide.tracker.Tracker;
 
 @Service
-public class TourGuideService extends InternalTestingService {
+public class TourGuideService {
 	@Autowired
 	private GpsUtil gpsUtil;
 	@Autowired
@@ -30,13 +30,6 @@ public class TourGuideService extends InternalTestingService {
 
 	/** Class constructors */
 	public TourGuideService() {
-		if (testMode) {
-			logger.info("TestMode enabled");
-			logger.debug("Initializing users");
-			initializeInternalUsers();
-			logger.debug("Finished initializing users");
-		}
-
 		// Start tracker
 		tracker.startTracking();
 
