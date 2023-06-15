@@ -1,8 +1,13 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import gpsUtil.location.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,8 @@ import org.springframework.stereotype.Service;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import rewardCentral.RewardCentral;
+import tourGuide.dto.AttractionDTO;
 import tourGuide.model.User;
 import tourGuide.tracker.Tracker;
 
@@ -18,6 +25,8 @@ import tourGuide.tracker.Tracker;
 public class TourGuideService {
 	@Autowired
 	private GpsUtil gpsUtil;
+	@Autowired
+	private RewardCentral rewardCentral;
 	@Autowired
 	private RewardsService rewardsService;
 	@Autowired
@@ -47,15 +56,35 @@ public class TourGuideService {
 		}
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for (Attraction attraction : gpsUtil.getAttractions()) {
-			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
+	public List<AttractionDTO> getNearByAttractions(VisitedLocation visitedLocation) {
+		// Sort list by distance from user
+		gpsUtil.getAttractions().sort(
+				Comparator.comparing(attraction -> rewardsService.isWithinUserProximity(attraction, visitedLocation.location))
+		);
+
+		// Get the closest five tourist attractions to the model - no matter how far away they are
+		List<Attraction> attractionsList = gpsUtil.getAttractions()
+				.stream()
+				.limit(5)
+				.collect(Collectors.toList());
+
+		// Prepare DTO
+		List<AttractionDTO> attractionDTOList = new ArrayList<>();
+		for (Attraction attraction : attractionsList) {
+			Location attractionDTOCoordinates = new Location(attraction.latitude, attraction.longitude);
+
+			AttractionDTO attractionDTO = new AttractionDTO();
+				attractionDTO.setAttractionName(attraction.attractionName);
+				attractionDTO.setAttractionCoordinates(attractionDTOCoordinates);
+				attractionDTO.setUserCoordinates(visitedLocation.location);
+				attractionDTO.setDistance(rewardsService.getDistance(attractionDTOCoordinates, visitedLocation.location));
+				attractionDTO.setRewardPoints(rewardCentral.getAttractionRewardPoints(attraction.attractionId, visitedLocation.userId));
+
+			attractionDTOList.add(attractionDTO);
 		}
-		
-		return nearbyAttractions;
+		attractionDTOList.sort(Comparator.comparing(AttractionDTO::getDistance));
+
+		return attractionDTOList;
 	}
 	
 	private void addShutDownHook() {

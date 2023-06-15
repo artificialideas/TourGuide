@@ -1,5 +1,6 @@
 package service;
 import tourGuide.Application;
+import tourGuide.dto.AttractionDTO;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
@@ -58,12 +59,11 @@ public class TourGuideServiceTest {
 		assertEquals(visitedLocation.userId, user.getUserId());
 	}
 	
-	@Ignore // Not yet implemented
 	@Test
 	public void getNearbyAttractions() {
 		VisitedLocation visitedLocation = userService.trackUserLocation(user);
 		
-		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
+		List<AttractionDTO> attractions = tourGuideService.getNearByAttractions(visitedLocation);
 		
 		assertEquals(5, attractions.size());
 	}
