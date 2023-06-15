@@ -1,8 +1,14 @@
 package service;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
+import org.junit.After;
+import org.junit.Before;
 import tourGuide.Application;
 import tourGuide.model.User;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.UserReward;
 import tourGuide.service.TourGuideService;
 import tourGuide.service.UserRewardService;
 import tripPricer.Provider;
@@ -25,15 +31,38 @@ public class UserRewardServiceTest {
     private UserRewardService userRewardService;
     @Autowired
     private TourGuideService tourGuideService;
+    @Autowired
+    private GpsUtil gpsUtil;
+
+    private User user;
+
+    @Before
+    public void setUp() {
+        InternalTestHelper.setInternalUserNumber(0);
+        user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+
+        VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
+        Attraction attraction = gpsUtil.getAttractions().get(0);
+        UserReward userReward = new UserReward(visitedLocation, attraction, 5);
+        user.addUserReward(userReward);
+        //tourGuideService.tracker.startTracking();
+    }
+
+    @After
+    public void tearDown() {
+        tourGuideService.tracker.stopTracking();
+    }
+
+    @Test
+    public void getUserRewards() {
+        List<UserReward> rewards = userRewardService.getUserRewards(user);
+
+        assertEquals(1, rewards.size());
+    }
 
     @Test
     public void getTripDeals() {
-        InternalTestHelper.setInternalUserNumber(0);
-        User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-        tourGuideService.tracker.startTracking();
-
         List<Provider> providers = userRewardService.getTripDeals(user);
-        tourGuideService.tracker.stopTracking();
 
         assertEquals(5, providers.size());
     }
