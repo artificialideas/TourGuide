@@ -51,7 +51,12 @@ public class RewardsService {
 			}
 		}
 	}
-	
+
+	public int isWithinUserProximity(Attraction attraction, Location location) {
+		return (int) Math.round(getDistance(attraction, location));
+	}
+
+	// Old method
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
 		int attractionProximityRange = 200;
 		return !(getDistance(attraction, location) > attractionProximityRange);
