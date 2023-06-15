@@ -2,11 +2,12 @@ package tourGuide.service;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.User;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import tourGuide.helper.InternalTestHelper;
-import tourGuide.model.User;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -19,12 +20,11 @@ import java.util.stream.IntStream;
 
 @Service
 public class InternalTestingService {
-    private final Logger logger = LoggerFactory.getLogger(TourGuideService.class);
-
+    private final Logger logger = LoggerFactory.getLogger(InternalTestingService.class);
     // Database connection will be used for external users, but for testing purposes internal users are provided and stored in memory
-    public Map<String, User> internalUserMap = new HashMap<>();
+    private final Map<String, User> internalUserMap = new HashMap<>();
 
-    void initializeInternalUsers() {
+    public Map<String, User> initializeInternalUsers() {
         IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
             String userName = "internalUser" + i;
             String phone = "000";
@@ -35,6 +35,8 @@ public class InternalTestingService {
             internalUserMap.put(userName, user);
         });
         logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
+
+        return internalUserMap;
     }
 
     private void generateUserLocationHistory(User user) {
