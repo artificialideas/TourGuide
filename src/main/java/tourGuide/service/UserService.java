@@ -21,8 +21,6 @@ public class UserService {
     private GpsUtil gpsUtil;
     @Autowired
     private RewardsService rewardsService;
-    @Autowired
-    private InternalTestingService internalTestingService;
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
 

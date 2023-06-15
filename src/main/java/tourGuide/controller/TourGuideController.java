@@ -35,7 +35,7 @@ public class TourGuideController {
         try {
             VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
             return JsonStream.serialize(visitedLocation.location);
-        } catch (RuntimeException ex) {
+        } catch (NullPointerException ex) {
             return ("User with username " + userName + " doesn't exist.");
         }
     }
@@ -51,13 +51,23 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @RequestMapping("/getNearbyAttractions") 
     public String getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-    	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
+        try {
+            VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
+            return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
+        } catch (NullPointerException ex) {
+            return ("User with username " + userName + " doesn't exist.");
+        } catch (ArithmeticException ex) {
+            return ("Unable to get  " + userName + " location.");
+        }
     }
     
     @RequestMapping("/getRewards") 
     public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(userRewardService.getUserRewards(getUser(userName)));
+        try {
+    	    return JsonStream.serialize(userRewardService.getUserRewards(getUser(userName)));
+        } catch (NullPointerException ex) {
+            return ("User with username " + userName + " doesn't exist.");
+        }
     }
     
     @RequestMapping("/getAllCurrentLocations")
@@ -77,8 +87,12 @@ public class TourGuideController {
     
     @RequestMapping("/getTripDeals")
     public String getTripDeals(@RequestParam String userName) {
-    	List<Provider> providers = userRewardService.getTripDeals(getUser(userName));
-    	return JsonStream.serialize(providers);
+        try {
+            List<Provider> providers = userRewardService.getTripDeals(getUser(userName));
+            return JsonStream.serialize(providers);
+        } catch (NullPointerException ex) {
+            return ("User with username " + userName + " doesn't exist.");
+        }
     }
     
     private User getUser(String userName) {
