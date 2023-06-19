@@ -1,10 +1,11 @@
 package tourGuide.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import gpsUtil.location.Location;
@@ -56,6 +57,18 @@ public class TourGuideService {
 		}
 	}
 
+	public Map<String, Location> getAllCurrentLocations() {
+		// Get a list of every model's most recent location
+		Map<String, Location> usersLocation = new HashMap<>();
+		List<User> users = userService.getAllUsers();
+		for (User user : users) {
+			if (user.getUserId() != null && user.getLastVisitedLocation().location != null)
+				usersLocation.put(user.getUserId().toString(), user.getLastVisitedLocation().location);
+		}
+
+		return usersLocation;
+	}
+
 	public List<AttractionDTO> getNearByAttractions(VisitedLocation visitedLocation) {
 		// Sort list by distance from user
 		gpsUtil.getAttractions().sort(
@@ -86,12 +99,8 @@ public class TourGuideService {
 
 		return attractionDTOList;
 	}
-	
+
 	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() { 
-		      public void run() {
-		        tracker.stopTracking();
-		      } 
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(tracker::stopTracking));
 	}
 }

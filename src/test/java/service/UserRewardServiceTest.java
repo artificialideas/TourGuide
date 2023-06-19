@@ -11,6 +11,7 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.model.UserReward;
 import tourGuide.service.TourGuideService;
 import tourGuide.service.UserRewardService;
+import tourGuide.service.UserService;
 import tripPricer.Provider;
 
 import org.junit.Test;
@@ -28,6 +29,8 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(classes={Application.class})
 public class UserRewardServiceTest {
     @Autowired
+    private UserService userService;
+    @Autowired
     private UserRewardService userRewardService;
     @Autowired
     private TourGuideService tourGuideService;
@@ -39,12 +42,13 @@ public class UserRewardServiceTest {
     @Before
     public void setUp() {
         InternalTestHelper.setInternalUserNumber(0);
-        user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+        user = userService.getAllUsers().get(0);
 
         VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
         Attraction attraction = gpsUtil.getAttractions().get(0);
         UserReward userReward = new UserReward(visitedLocation, attraction, 5);
         user.addUserReward(userReward);
+        
         //tourGuideService.tracker.startTracking();
     }
 

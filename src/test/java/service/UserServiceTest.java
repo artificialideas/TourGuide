@@ -34,8 +34,9 @@ public class UserServiceTest {
     @Before
     public void setUp() {
         InternalTestHelper.setInternalUserNumber(0);
-        user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+        user = userService.getAllUsers().get(0);
         userService.addUser(user);
+
         //tourGuideService.tracker.startTracking();
     }
 

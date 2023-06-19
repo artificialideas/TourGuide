@@ -1,4 +1,5 @@
 package service;
+import gpsUtil.location.Location;
 import tourGuide.Application;
 import tourGuide.dto.AttractionDTO;
 import tourGuide.helper.InternalTestHelper;
@@ -18,9 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
@@ -35,9 +38,9 @@ public class TourGuideServiceTest {
 	@Before
 	public void setUp() {
 		InternalTestHelper.setInternalUserNumber(0);
-		user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		userService.addUser(user);
-		tourGuideService.tracker.startTracking();
+		user = userService.getAllUsers().get(0);
+
+		//tourGuideService.tracker.startTracking();
 	}
 
 	@After
@@ -57,6 +60,13 @@ public class TourGuideServiceTest {
 		VisitedLocation visitedLocation = userService.trackUserLocation(user);
 
 		assertEquals(visitedLocation.userId, user.getUserId());
+	}
+
+	@Test
+	public void getAllCurrentLocations() {
+		Map<String, Location> usersLocation = tourGuideService.getAllCurrentLocations();
+
+		assertTrue(usersLocation.size() > 0);
 	}
 	
 	@Test

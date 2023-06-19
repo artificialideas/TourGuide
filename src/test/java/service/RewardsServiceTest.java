@@ -47,8 +47,7 @@ public class RewardsServiceTest {
 	@Before
 	public void setUp() {
 		attraction = gpsUtil.getAttractions().get(0);
-
-		user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		user = userService.getAllUsers().get(0);
 		userService.addUser(user);
 
 		//tourGuideService.tracker.startTracking();
@@ -73,7 +72,7 @@ public class RewardsServiceTest {
 	public void isWithinAttractionProximity() {
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
-	
+
 	@Ignore // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
