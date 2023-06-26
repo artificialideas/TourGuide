@@ -69,17 +69,16 @@ public class RewardsServiceTest {
 	}
 	
 	@Test
-	public void isWithinAttractionProximity() {
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
+	public void isWithinUserProximity() {
+		assertTrue(rewardsService.isWithinUserProximity(attraction, user.getLastVisitedLocation().location) > 0);
 	}
 
-	@Ignore // Needs fixed - can throw ConcurrentModificationException
+
 	@Test
 	public void nearAllAttractions() {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-
 		InternalTestHelper.setInternalUserNumber(1);
-		
+
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userRewardService.getUserRewards(userService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();

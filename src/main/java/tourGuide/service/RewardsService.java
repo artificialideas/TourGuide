@@ -1,7 +1,10 @@
 package tourGuide.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -15,10 +18,11 @@ import tourGuide.model.UserReward;
 @Service
 public class RewardsService {
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
-
 	// proximity in miles
     private final int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
+
+	private final Logger logger = LoggerFactory.getLogger(RewardsService.class);
 
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
@@ -40,10 +44,16 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		
+
+		CompletableFuture.runAsync(() -> getRewards(user, userLocations, attractions));
+	}
+
+	void getRewards(User user, List<VisitedLocation> userLocations, List<Attraction> attractions) {
 		for (VisitedLocation visitedLocation : userLocations) {
 			for (Attraction attraction : attractions) {
-				if (user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+				if (user.getUserRewards()
+						.stream()
+						.noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
 					if (nearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
@@ -54,12 +64,6 @@ public class RewardsService {
 
 	public int isWithinUserProximity(Attraction attraction, Location location) {
 		return (int) Math.round(getDistance(attraction, location));
-	}
-
-	// Old method
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		int attractionProximityRange = 200;
-		return !(getDistance(attraction, location) > attractionProximityRange);
 	}
 	
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
