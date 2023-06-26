@@ -40,11 +40,11 @@ public class TestPerformance {
 	private RewardsService rewardsService;
 
 	private StopWatch stopWatch;
-	private List<User> allUsers = new ArrayList<>();
+	private List<User> allUsers;
 
 	@BeforeEach
 	public void setUp() {
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(1000);
 		stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -89,7 +89,6 @@ public class TestPerformance {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 	
-	@Ignore
 	@Test
 	public void highVolumeGetRewards() {
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
