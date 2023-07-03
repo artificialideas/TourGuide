@@ -2,7 +2,6 @@ package tourGuide.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -56,12 +55,12 @@ public class RewardsService {
 			// Long-running process
 			getRewards(user, userLocations, attractions);
 		}, executor)
-		.handle((res, ex) -> {
-			if (ex != null) {
-				logger.error("Something went wrong " + ex.getMessage());
-			}
-			return res;
-		});
+			.handle((res, ex) -> {
+				if (ex != null) {
+					logger.error("Something went wrong " + ex.getMessage());
+				}
+				return res;
+			});
 	}
 
 	void getRewards(User user, List<VisitedLocation> userLocations, List<Attraction> attractions) {
