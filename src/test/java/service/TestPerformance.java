@@ -3,6 +3,8 @@ package service;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import org.junit.After;
+import org.junit.Before;
 import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -42,14 +44,14 @@ public class TestPerformance {
 	private StopWatch stopWatch;
 	private List<User> allUsers;
 
-	@BeforeEach
+	@Before
 	public void setUp() {
 		InternalTestHelper.setInternalUserNumber(1000);
 		stopWatch = new StopWatch();
 		stopWatch.start();
 	}
 
-	@AfterEach
+	@After
 	public void tearDown() {
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
@@ -77,7 +79,6 @@ public class TestPerformance {
 	 *          assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 	
-	@Ignore
 	@Test
 	public void highVolumeTrackLocation() {
 		allUsers = userService.getAllUsers();
@@ -117,6 +118,6 @@ public class TestPerformance {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
 
-		//assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 }

@@ -40,9 +40,6 @@ public class TourGuideService {
 
 	/** Class constructors */
 	public TourGuideService() {
-		// Start tracker
-		tracker.startTracking();
-
 		addShutDownHook();
 	}
 

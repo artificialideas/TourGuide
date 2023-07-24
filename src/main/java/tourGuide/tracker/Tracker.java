@@ -30,14 +30,6 @@ public class Tracker extends Thread {
 	public Tracker(TourGuideService tourGuideService) {}
 
 	/**
-	 * Start the tracker
-	 */
-	public void startTracking() {
-		stop = false;
-		executorService.submit(this);
-	}
-
-	/**
 	 * Assures to shut down the Tracker thread
 	 */
 	public void stopTracking() {
@@ -59,11 +51,11 @@ public class Tracker extends Thread {
 				break;
 			}
 
+			// Get all users
+			List<User> users = userService.getAllUsers();
 			// Start Tracker
 			stopWatch.start();
 
-			// Get all users
-			List<User> users = userService.getAllUsers();
 			users.forEach(userService::trackUserLocation);
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 

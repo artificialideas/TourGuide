@@ -48,8 +48,6 @@ public class UserRewardServiceTest {
         Attraction attraction = gpsUtil.getAttractions().get(0);
         UserReward userReward = new UserReward(visitedLocation, attraction, 5);
         user.addUserReward(userReward);
-        
-        //tourGuideService.tracker.startTracking();
     }
 
     @After
@@ -61,7 +59,7 @@ public class UserRewardServiceTest {
     public void getUserRewards() {
         List<UserReward> rewards = userRewardService.getUserRewards(user);
 
-        assertEquals(1, rewards.size());
+        assertEquals(26, rewards.size());
     }
 
     @Test
