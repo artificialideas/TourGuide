@@ -1,6 +1,5 @@
 package tourGuide.service;
 
-import gpsUtil.location.VisitedLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tourGuide.model.User;

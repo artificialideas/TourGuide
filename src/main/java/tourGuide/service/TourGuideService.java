@@ -5,7 +5,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import gpsUtil.location.Location;
@@ -43,11 +44,16 @@ public class TourGuideService {
 		addShutDownHook();
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user) throws ExecutionException, InterruptedException {
 		if (user.getVisitedLocations() != null) {
+			CompletableFuture<VisitedLocation> futureResult = userService.trackUserLocation(user);
+
+			// Wait for the trackUserLocation() to complete
+			VisitedLocation result = futureResult.get();
+			assert result != null;
 			return (user.getVisitedLocations().size() > 0) ?
 					user.getLastVisitedLocation() :
-					userService.trackUserLocation(user);
+					result;
 		} else {
 			logger.error("User with username " + user.getUserName() + " doesn't exist.");
 			return null;
