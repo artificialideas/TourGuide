@@ -3,7 +3,9 @@ package tourGuide.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +46,8 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		// Limit the number of threads
-		Executor executor = Executors.newFixedThreadPool(5);
+		// Adjusts the ThreadPool number of threads by reusing the unused ones
+		ExecutorService executor = Executors.newCachedThreadPool();
 
 		// Run the thread separately and notify about any failure that may occur
 		CompletableFuture.runAsync(() -> {
@@ -55,12 +57,14 @@ public class RewardsService {
 			// Long-running process
 			getRewards(user, userLocations, attractions);
 		}, executor)
-			.handle((res, ex) -> {
-				if (ex != null) {
-					logger.error("Something went wrong " + ex.getMessage());
-				}
-				return res;
-			});
+		.handle((res, ex) -> {
+			if (ex != null) {
+				logger.error("Something went wrong " + ex.getMessage());
+			}
+			return res;
+		});
+
+		executor.shutdown();
 	}
 
 	void getRewards(User user, List<VisitedLocation> userLocations, List<Attraction> attractions) {

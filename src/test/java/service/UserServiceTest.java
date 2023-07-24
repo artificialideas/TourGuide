@@ -36,8 +36,6 @@ public class UserServiceTest {
         InternalTestHelper.setInternalUserNumber(0);
         user = userService.getAllUsers().get(0);
         userService.addUser(user);
-
-        //tourGuideService.tracker.startTracking();
     }
 
     @After

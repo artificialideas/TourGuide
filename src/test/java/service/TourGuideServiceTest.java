@@ -39,8 +39,6 @@ public class TourGuideServiceTest {
 	public void setUp() {
 		InternalTestHelper.setInternalUserNumber(0);
 		user = userService.getAllUsers().get(0);
-
-		//tourGuideService.tracker.startTracking();
 	}
 
 	@After
