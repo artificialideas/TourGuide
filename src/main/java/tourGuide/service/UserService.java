@@ -52,11 +52,11 @@ public class UserService {
 
             return visitedLocation;
         }, executor)
-                .handle((res, ex) -> {
-                    if (ex != null) {
-                        logger.error("Something went wrong with trackUserLocation(): " + ex.getMessage());
-                    }
-                    return res;
+            .handle((res, ex) -> {
+                if (ex != null) {
+                    logger.error("Something went wrong with trackUserLocation() in UserService: " + ex.getMessage());
+                }
+                return res;
         });
 
         executor.shutdown();

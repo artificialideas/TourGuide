@@ -57,7 +57,7 @@ public class RewardsService {
 		}, executor)
 		.handle((res, ex) -> {
 			if (ex != null) {
-				logger.error("Something went wrong with calculateRewards(): " + ex.getMessage());
+				logger.error("Something went wrong with calculateRewards() in RewardsService: " + ex.getMessage());
 			}
 			return res;
 		});
