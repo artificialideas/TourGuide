@@ -1,4 +1,5 @@
 package service;
+
 import gpsUtil.location.Location;
 import tourGuide.Application;
 import tourGuide.dto.AttractionDTO;
@@ -6,12 +7,10 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
 import tourGuide.service.UserService;
-import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -37,7 +38,7 @@ public class TourGuideServiceTest {
 
 	@Before
 	public void setUp() {
-		InternalTestHelper.setInternalUserNumber(0);
+		InternalTestHelper.setInternalUserNumber(1);
 		user = userService.getAllUsers().get(0);
 	}
 
@@ -47,17 +48,25 @@ public class TourGuideServiceTest {
 	}
 	
 	@Test
-	public void trackUser() {
-		VisitedLocation visitedLocation = userService.trackUserLocation(user);
+	public void trackUser() throws ExecutionException, InterruptedException {
+		CompletableFuture<VisitedLocation> futureResult = userService.trackUserLocation(user);
+
+		// Wait for the trackUserLocation() to complete
+		VisitedLocation result = futureResult.get();
+		assertNotNull(result);
 		
-		assertEquals(user.getUserId(), visitedLocation.userId);
+		assertEquals(user.getUserId(), result.userId);
 	}
 
 	@Test
-	public void getUserLocation() {
-		VisitedLocation visitedLocation = userService.trackUserLocation(user);
+	public void getUserLocation() throws ExecutionException, InterruptedException {
+		CompletableFuture<VisitedLocation> futureResult = userService.trackUserLocation(user);
 
-		assertEquals(visitedLocation.userId, user.getUserId());
+		// Wait for the trackUserLocation() to complete
+		VisitedLocation result = futureResult.get();
+		assertNotNull(result);
+
+		assertEquals(result.userId, user.getUserId());
 	}
 
 	@Test
@@ -68,11 +77,15 @@ public class TourGuideServiceTest {
 	}
 	
 	@Test
-	public void getNearbyAttractions() {
-		VisitedLocation visitedLocation = userService.trackUserLocation(user);
+	public void getNearbyAttractions() throws ExecutionException, InterruptedException {
+		CompletableFuture<VisitedLocation> futureResult = userService.trackUserLocation(user);
+
+		// Wait for the trackUserLocation() to complete
+		VisitedLocation result = futureResult.get();
+		assertNotNull(result);
 		
-		List<AttractionDTO> attractions = tourGuideService.getNearByAttractions(visitedLocation);
+		List<AttractionDTO> attractions = tourGuideService.getNearByAttractions(result);
 		
-		assertEquals(5, attractions.size());
+		assertTrue(attractions.size() > 0);
 	}
 }

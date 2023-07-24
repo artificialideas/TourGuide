@@ -2,10 +2,8 @@ package tourGuide.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +66,14 @@ public class RewardsService {
 	}
 
 	void getRewards(User user, List<VisitedLocation> userLocations, List<Attraction> attractions) {
-		for (VisitedLocation visitedLocation : userLocations) {
-			for (Attraction attraction : attractions) {
+		// Use parallel concurrency for process improvement
+		userLocations
+				.parallelStream()
+				.forEach(visitedLocation -> {
+			attractions
+					.parallelStream()
+					.forEach(attraction -> {
+				// Work concurrently
 				if (user.getUserRewards()
 						.stream()
 						.noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
@@ -77,8 +81,8 @@ public class RewardsService {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
 				}
-			}
-		}
+			});
+		});
 	}
 
 	public int isWithinUserProximity(Attraction attraction, Location location) {

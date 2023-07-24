@@ -81,9 +81,9 @@ public class TestPerformance {
 	
 	@Test
 	public void highVolumeTrackLocation() {
+		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		allUsers = userService.getAllUsers();
 
-		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		for (User user : allUsers) {
 			userService.trackUserLocation(user);
 		}

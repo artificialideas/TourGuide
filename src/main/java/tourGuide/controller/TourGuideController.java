@@ -1,6 +1,7 @@
 package tourGuide.controller;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import gpsUtil.location.Attraction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class TourGuideController {
             return JsonStream.serialize(visitedLocation.location);
         } catch (NullPointerException ex) {
             return ("User with username " + userName + " doesn't exist.");
+        } catch (ExecutionException | InterruptedException ex) {
+            return ("Error with completable future: " + ex);
         }
     }
 
@@ -50,6 +53,8 @@ public class TourGuideController {
             return ("User with username " + userName + " doesn't exist.");
         } catch (ArithmeticException ex) {
             return ("Unable to get " + userName + " location.");
+        } catch (ExecutionException | InterruptedException ex) {
+            return ("Error with completable future: " + ex);
         }
     }
     

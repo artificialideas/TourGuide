@@ -42,10 +42,10 @@ public class UserService {
             logger.error(user.getUserName() + " already exists.");
     }
 
-    public VisitedLocation trackUserLocation(User user) {
+    public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
         ExecutorService executor = Executors.newCachedThreadPool();
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<VisitedLocation> futureResult = CompletableFuture.supplyAsync(() -> {
             VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
             user.addToVisitedLocations(visitedLocation);
             rewardsService.calculateRewards(user);
@@ -61,6 +61,6 @@ public class UserService {
 
         executor.shutdown();
 
-        return null;
+        return futureResult;
     }
 }
