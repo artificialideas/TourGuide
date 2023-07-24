@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class UserService {
@@ -40,10 +43,24 @@ public class UserService {
     }
 
     public VisitedLocation trackUserLocation(User user) {
-        VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-        user.addToVisitedLocations(visitedLocation);
-        rewardsService.calculateRewards(user);
+        ExecutorService executor = Executors.newCachedThreadPool();
 
-        return visitedLocation;
+        CompletableFuture.supplyAsync(() -> {
+            VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+            user.addToVisitedLocations(visitedLocation);
+            rewardsService.calculateRewards(user);
+
+            return visitedLocation;
+        }, executor)
+                .handle((res, ex) -> {
+                    if (ex != null) {
+                        logger.error("Something went wrong with trackUserLocation(): " + ex.getMessage());
+                    }
+                    return res;
+        });
+
+        executor.shutdown();
+
+        return null;
     }
 }

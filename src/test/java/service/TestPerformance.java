@@ -46,7 +46,7 @@ public class TestPerformance {
 
 	@Before
 	public void setUp() {
-		InternalTestHelper.setInternalUserNumber(1000);
+		InternalTestHelper.setInternalUserNumber(100000);
 		stopWatch = new StopWatch();
 		stopWatch.start();
 	}
@@ -99,14 +99,11 @@ public class TestPerformance {
 
 		allUsers.forEach(u -> {
 			u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date()));
-			userService.trackUserLocation(u);
+			rewardsService.calculateRewards(u);
 		});
-	    /*allUsers.forEach(u -> {
-			if (rewardsService.calculateRewards(u) != null)
-				assertTrue(rewardsService.calculateRewards(u).getUserRewards().size() > 0);
-		});*/
 
 		for (User user : allUsers) {
+			// Ensure that "user" has the result from CompletableFuture
 			while (user.getUserRewards().size() == 0) {
 				try {
 					TimeUnit.SECONDS.sleep(10);
