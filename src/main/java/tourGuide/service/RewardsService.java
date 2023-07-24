@@ -59,7 +59,7 @@ public class RewardsService {
 		}, executor)
 		.handle((res, ex) -> {
 			if (ex != null) {
-				logger.error("Something went wrong " + ex.getMessage());
+				logger.error("Something went wrong with calculateRewards(): " + ex.getMessage());
 			}
 			return res;
 		});
