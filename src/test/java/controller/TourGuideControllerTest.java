@@ -37,7 +37,7 @@ public class TourGuideControllerTest {
 
     @BeforeEach
     public void setUp() {
-        InternalTestHelper.setInternalUserNumber(1);
+        InternalTestHelper.setInternalUserNumber(100);
         user = userService.getAllUsers().get(0);
     }
 
