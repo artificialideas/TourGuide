@@ -3,8 +3,9 @@ package service;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -12,24 +13,16 @@ import tourGuide.service.TourGuideService;
 import tourGuide.model.User;
 import tourGuide.service.UserService;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.apache.commons.lang3.time.StopWatch;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 public class TestPerformance {
 	@Autowired
@@ -44,14 +37,14 @@ public class TestPerformance {
 	private StopWatch stopWatch;
 	private List<User> allUsers;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		InternalTestHelper.setInternalUserNumber(100000);
 		stopWatch = new StopWatch();
 		stopWatch.start();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();

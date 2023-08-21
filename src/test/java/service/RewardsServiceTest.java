@@ -3,6 +3,9 @@ package service;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import tourGuide.Application;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -11,22 +14,16 @@ import tourGuide.model.User;
 import tourGuide.service.UserRewardService;
 import tourGuide.service.UserService;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 public class RewardsServiceTest {
 	@Autowired
@@ -42,13 +39,13 @@ public class RewardsServiceTest {
 
 	private User user;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		InternalTestHelper.setInternalUserNumber(1);
 		user = userService.getAllUsers().get(0);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		tourGuideService.tracker.stopTracking();
 	}
